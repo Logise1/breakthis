@@ -123,7 +123,7 @@ window.currentUser = {
 
 function checkPermissions(){
   if(window.currentUser && window.currentUser.role === "admin"){
-    var _h=5381,_s='BrK8Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_8','v'+Math.abs(_h).toString(36));
+    fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:8})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_8',d.token)).catch(()=>{});
     document.getElementById('overlay').classList.add('show');
   } else {
     alert('❌ Acceso denegado. Tu rol es: "' + (window.currentUser?window.currentUser.role:'undefined') + '".\nNecesitas: "admin"');

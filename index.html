@@ -327,11 +327,29 @@
       { id: 10, title: "Contra Reloj", desc: "La bóveda se abre en 5 minutos en el cliente. Intercepta el temporizador.", diff: 5, type: "Bóveda digital" }
     ];
 
-    // Anti-trampas: cada reto genera un token único verificado por hash
+    const API = 'https://breakthis.logise1123.workers.dev';
+
+    // Retos 1-2: hash local | Retos 3-10: backend con HMAC
     function _seal(n){var h=5381,s='BrK'+n+'Th!s_x9';for(var i=0;i<s.length;i++){h=((h<<5)+h)+s.charCodeAt(i);h=h&h}return'v'+Math.abs(h).toString(36)}
-    function isCompleted(id) { return localStorage.getItem('breakthis_' + id) === _seal(id); }
+    const _ok = new Set();
+    function isCompleted(id) { return _ok.has(id); }
     function isUnlocked(id) { return id === 1 || isCompleted(id - 1); }
     function getCompletedCount() { return challenges.filter(c => isCompleted(c.id)).length; }
+
+    async function verifyAll() {
+      _ok.clear();
+      for (let i = 1; i <= 2; i++) if (localStorage.getItem('breakthis_'+i) === _seal(i)) _ok.add(i);
+      const tokens = {};
+      for (let i = 3; i <= 10; i++) { const t = localStorage.getItem('breakthis_'+i); if (t) tokens[i] = t; }
+      if (Object.keys(tokens).length > 0) {
+        try {
+          const r = await fetch(API+'/api/verify-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens})});
+          const d = await r.json();
+          for (const [id, v] of Object.entries(d.results||{})) if (v) _ok.add(parseInt(id));
+        } catch(e) { console.warn('[BreakThis] Backend no disponible'); }
+      }
+      renderGrid();
+    }
 
     function resetProgress() {
       if (confirm('¿Estás seguro de que deseas reiniciar todo tu progreso?')) {
@@ -394,9 +412,8 @@
     }
 
     // Inicialización
-    renderGrid();
-    window.addEventListener('focus', renderGrid);
-    window.addEventListener('storage', renderGrid);
+    verifyAll();
+    window.addEventListener('focus', () => verifyAll());
   </script>
 </body>
 

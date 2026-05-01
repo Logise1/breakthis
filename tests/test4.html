@@ -91,7 +91,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(160deg,#0f2027,#2
 
 <script>
 function submitForm(){
-  var _h=5381,_s='BrK4Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_4','v'+Math.abs(_h).toString(36));
+  fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:4})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_4',d.token)).catch(()=>{});
   document.getElementById('overlay').classList.add('show');
 }
 </script>

@@ -105,7 +105,7 @@ function verifySession(){
     if(!raw){alert('❌ No hay token en localStorage');return}
     const token=JSON.parse(raw);
     if(token.user==='admin'&&token.role==='superuser'&&token.authenticated===true){
-      var _h=5381,_s='BrK7Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_7','v'+Math.abs(_h).toString(36));
+      fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:7})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_7',d.token)).catch(()=>{});
       document.getElementById('overlay').classList.add('show');
     } else {
       alert('❌ Token inválido. Verifica los campos: user, role, authenticated');
