@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VaultX — Acceso Restringido</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0d0d12;color:#e0e0e0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.vault-card{background:linear-gradient(145deg,#13131a,#1a1a25);border:1px solid rgba(251,146,60,0.15);
+  border-radius:20px;padding:50px 40px;width:450px;max-width:90vw;box-shadow:0 0 60px rgba(251,146,60,0.05)}
+.vault-card h1{font-size:1.6rem;font-weight:700;color:#fb923c;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.vault-card .sub{color:#666;font-size:0.8rem;margin-bottom:30px;font-family:'Share Tech Mono',monospace}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:0.75rem;color:#888;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.field input{width:100%;padding:13px 16px;border:1px solid rgba(251,146,60,0.15);border-radius:10px;
+  font-size:0.95rem;font-family:'Share Tech Mono',monospace;background:rgba(0,0,0,0.4);color:#fb923c;outline:none;transition:border-color 0.3s}
+.field input:focus{border-color:#fb923c}
+.access-btn{width:100%;padding:14px;background:linear-gradient(135deg,#fb923c,#f97316);color:#000;border:none;
+  border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity 0.3s;font-family:'Inter',sans-serif}
+.access-btn:hover{opacity:0.9}
+.msg{text-align:center;font-size:0.8rem;margin-top:12px;padding:10px;border-radius:8px;display:none}
+.msg.err{display:block;background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+.console-hint{margin-top:20px;padding:12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.05);
+  border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:#444}
+.console-hint code{color:#fb923c}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="vault-card">
+  <h1>🔐 VaultX</h1>
+  <p class="sub">// SISTEMA DE ACCESO RESTRINGIDO</p>
+  <div class="field">
+    <label>Código de Acceso</label>
+    <input type="text" id="accessCode" placeholder="Introduce tu código">
+  </div>
+  <button class="access-btn" onclick="attemptAccess()">Verificar Acceso</button>
+  <div class="msg" id="msg"></div>
+  <div class="console-hint">
+    <p>// Sistema de validación activo</p>
+    <p>// Función: <code>validateAccess(code)</code></p>
+    <p>// Estado: todas las solicitudes denegadas</p>
+  </div>
+</div>
+
+<div class="hint-bar">💡 RETO #5: La función validateAccess() siempre devuelve false. Redefínela en la consola para que devuelva true</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #5 — Validación Rota</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+// Sistema de validación — nivel de seguridad: máximo
+function validateAccess(code) {
+  // TODO: implementar validación real
+  // Por ahora, denegar todo por seguridad
+  console.log("[VaultX] Validando código:", code);
+  console.log("[VaultX] Estado: DENEGADO");
+  return false;
+}
+
+function attemptAccess(){
+  const code = document.getElementById('accessCode').value;
+  const result = validateAccess(code);
+  const msg = document.getElementById('msg');
+  if(result === true){
+    localStorage.setItem('breakthis_5','completed');
+    document.getElementById('overlay').classList.add('show');
+  } else {
+    msg.className='msg err';
+    msg.textContent='❌ Acceso denegado — validación fallida';
+    msg.style.display='block';
+    setTimeout(()=>msg.style.display='none',3000);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberAcademy — Registro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:linear-gradient(160deg,#0f2027,#203a43,#2c5364);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.register-card{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;padding:50px 40px;width:440px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.register-card h1{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:4px}
+.register-card .sub{color:rgba(255,255,255,0.5);font-size:0.8rem;margin-bottom:30px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.6);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.field input,.field select{width:100%;padding:13px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:12px;
+  font-size:0.9rem;font-family:'Inter',sans-serif;background:rgba(0,0,0,0.3);color:#fff;outline:none;transition:border-color 0.3s}
+.field input:focus,.field select:focus{border-color:#10b981}
+.field select option{background:#1a2a3a;color:#fff}
+.terms{display:flex;align-items:center;gap:8px;font-size:0.8rem;color:rgba(255,255,255,0.5);margin:16px 0}
+.terms input[type=checkbox]{accent-color:#10b981}
+.submit-btn{width:100%;padding:15px;background:#10b981;color:#fff;border:none;border-radius:12px;
+  font-size:1rem;font-weight:600;cursor:not-allowed;opacity:0.4;transition:all 0.3s;font-family:'Inter',sans-serif}
+.submit-btn:not(:disabled){cursor:pointer;opacity:1}
+.submit-btn:not(:disabled):hover{background:#059669}
+.info-box{margin-top:16px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);
+  border-radius:10px;font-size:0.75rem;color:#fca5a5;text-align:center}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="register-card">
+  <h1>🎓 CyberAcademy</h1>
+  <p class="sub">Registro de nuevo estudiante</p>
+  <div class="field">
+    <label>Nombre completo</label>
+    <input type="text" id="name" placeholder="Tu nombre">
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="email" placeholder="tu@email.com">
+  </div>
+  <div class="field">
+    <label>Contraseña</label>
+    <input type="password" id="pass" placeholder="••••••••">
+  </div>
+  <div class="field">
+    <label>Plan</label>
+    <select id="plan">
+      <option value="free">Gratuito</option>
+      <option value="pro">Pro — 9.99€/mes</option>
+      <option value="elite">Elite — 29.99€/mes</option>
+    </select>
+  </div>
+  <div class="terms">
+    <input type="checkbox" id="terms"><label for="terms" style="cursor:pointer">Acepto los términos y condiciones</label>
+  </div>
+  <!-- El botón está desactivado y no se puede enviar el formulario -->
+  <button class="submit-btn" id="registerBtn" disabled onclick="submitForm()">Registrarse</button>
+  <div class="info-box">⚠️ El registro está temporalmente deshabilitado por mantenimiento del servidor.</div>
+</div>
+
+<div class="hint-bar">💡 RETO #4: El botón de registro está desactivado (disabled). Usa la consola para quitarle el atributo "disabled" y poder hacer clic</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #4 — Desactivado</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function submitForm(){
+  localStorage.setItem('breakthis_4','completed');
+  document.getElementById('overlay').classList.add('show');
+}
+</script>
+</body>
+</html>

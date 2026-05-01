@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdminPanel — Panel de Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f172a;color:#e0e0e0;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 30px;
+  background:#1e293b;border-bottom:1px solid #334155}
+.topbar h1{font-size:1rem;font-weight:700;color:#60a5fa}
+.topbar .user-badge{background:#334155;padding:6px 14px;border-radius:8px;font-size:0.8rem;color:#94a3b8}
+.dashboard{max-width:800px;margin:40px auto;padding:0 20px}
+.access-denied{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:16px;
+  padding:40px;text-align:center;margin-bottom:30px}
+.access-denied h2{color:#ef4444;font-size:1.5rem;margin-bottom:10px}
+.access-denied p{color:#888;font-size:0.9rem;line-height:1.6}
+.check-btn{display:inline-block;margin-top:20px;padding:12px 30px;background:#3b82f6;color:#fff;border:none;
+  border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+.check-btn:hover{background:#2563eb}
+.info-panel{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-top:20px}
+.info-panel h3{font-size:0.85rem;color:#60a5fa;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.info-panel .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #334155;font-size:0.85rem}
+.info-panel .row:last-child{border:none}
+.info-panel .row .label{color:#64748b}
+.info-panel .row .value{color:#94a3b8;font-family:'Share Tech Mono',monospace}
+.cookie-info{background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.2);border-radius:12px;
+  padding:16px;margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:#fb923c}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🛡️ AdminPanel v3.2</h1>
+  <div class="user-badge" id="userBadge">👤 Invitado</div>
+</div>
+
+<div class="dashboard">
+  <div class="access-denied" id="deniedBox">
+    <h2>⛔ Acceso Denegado</h2>
+    <p>No tienes permisos de administrador. Esta sección requiere privilegios elevados.<br>
+       El sistema verifica tu rol mediante cookies del navegador.</p>
+    <button class="check-btn" onclick="checkAccess()">Verificar Permisos</button>
+  </div>
+
+  <div class="info-panel">
+    <h3>Información del Sistema</h3>
+    <div class="row"><span class="label">Servidor</span><span class="value">prod-eu-west-1</span></div>
+    <div class="row"><span class="label">Versión</span><span class="value">3.2.1-stable</span></div>
+    <div class="row"><span class="label">Auth Method</span><span class="value">Cookie-based</span></div>
+    <div class="row"><span class="label">Required Cookie</span><span class="value">role</span></div>
+    <div class="row"><span class="label">Required Value</span><span class="value">*****</span></div>
+  </div>
+
+  <div class="cookie-info">
+    <p>// Cookie actual del navegador:</p>
+    <p id="currentCookie">// document.cookie = "<span id="cookieDisplay">vacío</span>"</p>
+    <p>// Se requiere: cookie "role" con valor "admin"</p>
+  </div>
+</div>
+
+<div class="hint-bar">💡 RETO #6: Establece la cookie "role" con valor "admin" usando document.cookie en la consola, luego haz clic en "Verificar Permisos"</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #6 — Cookie Monster</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function getCookie(name){
+  const v=document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');
+  return v?v.pop():'';
+}
+
+function updateCookieDisplay(){
+  document.getElementById('cookieDisplay').textContent=document.cookie||'vacío';
+}
+
+function checkAccess(){
+  updateCookieDisplay();
+  const role=getCookie('role');
+  if(role==='admin'){
+    localStorage.setItem('breakthis_6','completed');
+    document.getElementById('overlay').classList.add('show');
+  } else {
+    alert('❌ Cookie "role" no encontrada o valor incorrecto.\nValor actual: "'+ role +'"');
+  }
+}
+
+setInterval(updateCookieDisplay,1000);
+updateCookieDisplay();
+</script>
+</body>
+</html>

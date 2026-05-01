@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EliteContent — Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0f1a;color:#e0e0e0;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;
+  background:rgba(15,15,26,0.95);border-bottom:1px solid rgba(138,92,246,0.2)}
+nav h1{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav .links{display:flex;gap:20px;font-size:0.85rem;color:#888}
+nav .links a{color:#888;text-decoration:none;cursor:pointer}
+.hero{text-align:center;padding:80px 20px 40px}
+.hero h2{font-size:2.5rem;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#888;max-width:500px;margin:0 auto;line-height:1.6}
+.content-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;max-width:1000px;margin:40px auto;padding:0 20px}
+.content-card{background:rgba(20,20,35,0.8);border:1px solid rgba(138,92,246,0.15);border-radius:16px;padding:30px;position:relative;overflow:hidden}
+.content-card h3{font-size:1.1rem;margin-bottom:8px;color:#e0e0e0}
+.content-card p{font-size:0.85rem;color:#666;line-height:1.5}
+.content-card .lock-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(15,15,26,0.85);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;backdrop-filter:blur(4px)}
+.content-card .lock-overlay span{font-size:2rem;margin-bottom:8px}
+.content-card .lock-overlay p{color:#a78bfa;font-size:0.8rem}
+/* Este botón existe pero está oculto */
+#secret-access-btn{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  padding:16px 40px;background:linear-gradient(135deg,#a78bfa,#ec4899);color:#fff;border:none;
+  border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
+  box-shadow:0 0 30px rgba(138,92,246,0.4);z-index:100}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>EliteContent</h1>
+  <div class="links">
+    <a>Inicio</a><a>Cursos</a><a>Premium</a><a>Contacto</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h2>Contenido Premium</h2>
+  <p>Accede a cursos exclusivos, tutoriales avanzados y recursos premium. Necesitas una suscripción activa.</p>
+</div>
+
+<div class="content-grid">
+  <div class="content-card">
+    <h3>🎓 Hacking Ético Avanzado</h3>
+    <p>Aprende técnicas de pentesting profesional con laboratorios prácticos.</p>
+    <div class="lock-overlay"><span>🔒</span><p>Solo Premium</p></div>
+  </div>
+  <div class="content-card">
+    <h3>🛡️ Seguridad en la Nube</h3>
+    <p>AWS, Azure y GCP: configuración segura y auditoría.</p>
+    <div class="lock-overlay"><span>🔒</span><p>Solo Premium</p></div>
+  </div>
+  <div class="content-card">
+    <h3>🕵️ Ingeniería Inversa</h3>
+    <p>Desmonta binarios y analiza malware como un profesional.</p>
+    <div class="lock-overlay"><span>🔒</span><p>Solo Premium</p></div>
+  </div>
+</div>
+
+<!-- Botón de acceso secreto - oculto mediante CSS -->
+<button id="secret-access-btn" onclick="grantAccess()">⚡ ACCESO PREMIUM DESBLOQUEADO</button>
+
+<div class="hint-bar">💡 RETO #3: Hay un botón oculto en el DOM. Encuéntralo y hazlo visible con la consola (pista: document.getElementById, style.display)</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #3 — El Botón Fantasma</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function grantAccess(){
+  localStorage.setItem('breakthis_3','completed');
+  document.getElementById('overlay').classList.add('show');
+}
+</script>
+</body>
+</html>
