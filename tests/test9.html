@@ -63,23 +63,24 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e0;min-height:
     <div class="msg-bubble system">🔒 Este chat está cifrado de extremo a extremo</div>
     <div class="msg-bubble received">
       <div class="sender">@shadow_admin</div>
-      Te dejé la contraseña codificada en el atributo data del formulario. Usa atob() para decodificarla.
+      La contraseña ya no está en el HTML. Ahora la sirve el servidor.
       <div class="time">14:32</div>
     </div>
     <div class="msg-bubble received">
       <div class="sender">@shadow_admin</div>
-      La función atob() decodifica Base64 en JavaScript. Ejecútala en la consola.
+      Llama a la API del servidor para obtenerla codificada en Base64. Luego decodifícala con atob().
       <div class="time">14:33</div>
     </div>
   </div>
-  <div class="login-section" data-encoded-password="Q2lwaGVyQnJlYWtlcjIwMjQh">
+  <div class="login-section">
     <label>Contraseña del canal</label>
     <input type="password" id="password" placeholder="Introduce la contraseña decodificada">
     <button onclick="tryAccess()">Descifrar y Acceder</button>
   </div>
   <div class="encoded-hint">
-    // data-encoded-password: <span>"Q2lwaGVyQnJlYWtlcjIwMjQh"</span><br>
-    // Pista: atob("Q2lwaGVyQnJlYWtlcjIwMjQh")
+    // La contraseña se obtiene del servidor:<br>
+    // fetch("<span>https://breakthis.logise1123.workers.dev/api/level/9/cipher</span>")<br>
+    // Decodifica el campo "cipher" con atob()
   </div>
 </div>
 
@@ -92,16 +93,15 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e0;min-height:
 </div>
 
 <script>
+const API='https://breakthis.logise1123.workers.dev';
 function tryAccess(){
   const input=document.getElementById('password').value;
-  const encoded=document.querySelector('[data-encoded-password]').getAttribute('data-encoded-password');
-  const decoded=atob(encoded);
-  if(input===decoded){
-    fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:9})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_9',d.token)).catch(()=>{});
-    document.getElementById('overlay').classList.add('show');
-  } else {
-    alert('❌ Contraseña incorrecta.\nPista: usa atob() en la consola para decodificar el valor Base64.');
-  }
+  if(!input){alert('❌ Introduce una contraseña');return}
+  fetch(API+'/api/level/9/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:input})})
+    .then(r=>r.json()).then(d=>{
+      if(d.success){localStorage.setItem('breakthis_9',d.token);document.getElementById('overlay').classList.add('show')}
+      else alert('❌ Contraseña incorrecta.\n'+(d.hint||''));
+    }).catch(()=>alert('❌ Error conectando con el servidor'));
 }
 document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')tryAccess()});
 </script>

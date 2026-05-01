@@ -103,6 +103,10 @@ body{font-family:'Inter',sans-serif;background:#1a1a2e;color:#e0e0e0;min-height:
     <p>&nbsp;&nbsp;name: "invitado_42",</p>
     <p>&nbsp;&nbsp;role: "viewer"  // ← cambia esto a "admin"</p>
     <p>}</p>
+    <p>// Pero cambiar el rol NO es suficiente...</p>
+    <p>// También necesitas un <span class="var">código de acceso</span> del servidor:</p>
+    <p>// POST <span class="fn">https://breakthis.logise1123.workers.dev/api/level/8/access-code</span></p>
+    <p>// Body: <span class="fn">{role: "admin"}</span></p>
     <p>// Luego llama: <span class="fn">checkPermissions()</span></p>
   </div>
 </div>
@@ -116,18 +120,27 @@ body{font-family:'Inter',sans-serif;background:#1a1a2e;color:#e0e0e0;min-height:
 </div>
 
 <script>
+const API='https://breakthis.logise1123.workers.dev';
 window.currentUser = {
   name: "invitado_42",
   role: "viewer"
 };
+window.accessCode = null;
 
 function checkPermissions(){
-  if(window.currentUser && window.currentUser.role === "admin"){
-    fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:8})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_8',d.token)).catch(()=>{});
-    document.getElementById('overlay').classList.add('show');
-  } else {
-    alert('❌ Acceso denegado. Tu rol es: "' + (window.currentUser?window.currentUser.role:'undefined') + '".\nNecesitas: "admin"');
+  if(!window.currentUser||window.currentUser.role!=='admin'){
+    alert('❌ Tu rol es: "'+(window.currentUser?window.currentUser.role:'undefined')+'". Necesitas "admin".');
+    return;
   }
+  if(!window.accessCode){
+    alert('❌ Rol correcto, pero falta el código de acceso.\nObtén el código del endpoint /api/level/8/access-code');
+    return;
+  }
+  fetch(API+'/api/level/8/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'admin',code:window.accessCode})})
+    .then(r=>r.json()).then(d=>{
+      if(d.success){localStorage.setItem('breakthis_8',d.token);document.getElementById('overlay').classList.add('show')}
+      else alert('❌ Código de acceso incorrecto.\n'+(d.hint||''));
+    }).catch(()=>alert('❌ Error conectando con el servidor'));
 }
 </script>
 </body>

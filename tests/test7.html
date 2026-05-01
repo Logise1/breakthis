@@ -72,8 +72,11 @@ body{font-family:'Inter',sans-serif;background:#020617;color:#e2e8f0;min-height:
 {
   <span class="key">"user"</span>: <span class="str">"admin"</span>,
   <span class="key">"role"</span>: <span class="str">"superuser"</span>,
-  <span class="key">"authenticated"</span>: <span class="val">true</span>
-}</pre>
+  <span class="key">"pin"</span>: <span class="val">??? (consulta la API)</span>
+}
+
+<span class="key">API:</span> <span class="str">GET /api/level/7/requirements</span>
+<span class="key">Pin:</span> <span class="str">GET /api/level/7/pin</span> <span class="val">(requiere header Authorization)</span></pre>
   </div>
 
   <div class="panel">
@@ -92,6 +95,7 @@ body{font-family:'Inter',sans-serif;background:#020617;color:#e2e8f0;min-height:
 </div>
 
 <script>
+const API='https://breakthis.logise1123.workers.dev';
 function updateTokenDisplay(){
   const token=localStorage.getItem('neobank_session');
   document.getElementById('currentToken').textContent=
@@ -102,17 +106,14 @@ function verifySession(){
   updateTokenDisplay();
   try{
     const raw=localStorage.getItem('neobank_session');
-    if(!raw){alert('❌ No hay token en localStorage');return}
-    const token=JSON.parse(raw);
-    if(token.user==='admin'&&token.role==='superuser'&&token.authenticated===true){
-      fetch('https://breakthis.logise1123.workers.dev/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge:7})}).then(r=>r.json()).then(d=>localStorage.setItem('breakthis_7',d.token)).catch(()=>{});
-      document.getElementById('overlay').classList.add('show');
-    } else {
-      alert('❌ Token inválido. Verifica los campos: user, role, authenticated');
-    }
-  }catch(e){
-    alert('❌ Error parseando el token. Asegúrate de que es JSON válido.');
-  }
+    if(!raw){alert('❌ No hay token en localStorage.\nCrea "neobank_session" con user, role y pin.');return}
+    const session=JSON.parse(raw);
+    fetch(API+'/api/level/7/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})})
+      .then(r=>r.json()).then(d=>{
+        if(d.success){localStorage.setItem('breakthis_7',d.token);document.getElementById('overlay').classList.add('show')}
+        else alert('❌ Token inválido.\n'+(d.hint||'Verifica user, role y pin.'));
+      }).catch(()=>alert('❌ Error conectando con el servidor'));
+  }catch(e){alert('❌ JSON inválido en neobank_session');}
 }
 
 setInterval(updateTokenDisplay,1000);
