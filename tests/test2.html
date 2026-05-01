@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ByteBlog — Acceso Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:50px 40px;width:420px;max-width:90vw}
+.brand{text-align:center;margin-bottom:30px}
+.brand h1{font-family:'Merriweather',serif;font-size:1.8rem;color:#2d2d2d}
+.brand h1 span{color:#667eea}
+.brand p{color:#999;font-size:0.8rem;margin-top:6px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:0.8rem;color:#666;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.field input{width:100%;padding:13px 16px;border:2px solid #eee;border-radius:12px;font-size:0.95rem;
+  font-family:'Inter',sans-serif;transition:all 0.3s;outline:none;background:#fafafa}
+.field input:focus{border-color:#667eea;background:#fff}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;
+  border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity 0.3s;font-family:'Inter',sans-serif}
+.btn:hover{opacity:0.9}
+.msg{text-align:center;font-size:0.8rem;margin-top:12px;padding:8px;border-radius:8px;display:none}
+.msg.err{display:block;background:#ffeaea;color:#e74c3c}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="brand">
+    <h1>Byte<span>Blog</span></h1>
+    <p>Panel de administración del blog</p>
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="email" placeholder="admin@byteblog.com">
+  </div>
+  <div class="field">
+    <label>Contraseña</label>
+    <input type="password" id="password" placeholder="••••••••">
+  </div>
+  <button class="btn" onclick="doLogin()">Acceder al Panel</button>
+  <div class="msg" id="msg"></div>
+</div>
+
+<div class="hint-bar">💡 RETO #2: Las credenciales están en una variable JavaScript. Abre la consola (F12) y búscalas</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #2 — Variables Expuestas</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+// Configuración del sistema - NO TOCAR
+const ADMIN_EMAIL = "admin@byteblog.com";
+const ADMIN_PASSWORD = "Byt3Bl0g_S3cr3t!";
+const API_ENDPOINT = "/api/v2/auth";
+const DEBUG_MODE = true;
+
+function doLogin(){
+  const e=document.getElementById('email').value;
+  const p=document.getElementById('password').value;
+  const msg=document.getElementById('msg');
+  if(p===ADMIN_PASSWORD){
+    localStorage.setItem('breakthis_2','completed');
+    document.getElementById('overlay').classList.add('show');
+  } else {
+    msg.className='msg err';
+    msg.textContent='❌ Email o contraseña incorrectos';
+    msg.style.display='block';
+    setTimeout(()=>msg.style.display='none',3000);
+  }
+}
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+</script>
+</body>
+</html>
