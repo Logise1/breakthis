@@ -84,7 +84,7 @@ function doLogin(){
   const p=document.getElementById('password').value;
   const msg=document.getElementById('msg');
   if(p===ADMIN_PASSWORD){
-    localStorage.setItem('breakthis_2','completed');
+    var _h=5381,_s='BrK2Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_2','v'+Math.abs(_h).toString(36));
     document.getElementById('overlay').classList.add('show');
   } else {
     msg.className='msg err';

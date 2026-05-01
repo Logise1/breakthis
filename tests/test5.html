@@ -88,7 +88,7 @@ function attemptAccess(){
   const result = validateAccess(code);
   const msg = document.getElementById('msg');
   if(result === true){
-    localStorage.setItem('breakthis_5','completed');
+    var _h=5381,_s='BrK5Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_5','v'+Math.abs(_h).toString(36));
     document.getElementById('overlay').classList.add('show');
   } else {
     msg.className='msg err';

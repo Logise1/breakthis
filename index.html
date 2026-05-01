@@ -327,7 +327,9 @@
       { id: 10, title: "Contra Reloj", desc: "La bóveda se abre en 5 minutos en el cliente. Intercepta el temporizador.", diff: 5, type: "Bóveda digital" }
     ];
 
-    function isCompleted(id) { return localStorage.getItem('breakthis_' + id) === 'completed'; }
+    // Anti-trampas: cada reto genera un token único verificado por hash
+    function _seal(n){var h=5381,s='BrK'+n+'Th!s_x9';for(var i=0;i<s.length;i++){h=((h<<5)+h)+s.charCodeAt(i);h=h&h}return'v'+Math.abs(h).toString(36)}
+    function isCompleted(id) { return localStorage.getItem('breakthis_' + id) === _seal(id); }
     function isUnlocked(id) { return id === 1 || isCompleted(id - 1); }
     function getCompletedCount() { return challenges.filter(c => isCompleted(c.id)).length; }
 

@@ -97,7 +97,7 @@ function tryAccess(){
   const encoded=document.querySelector('[data-encoded-password]').getAttribute('data-encoded-password');
   const decoded=atob(encoded);
   if(input===decoded){
-    localStorage.setItem('breakthis_9','completed');
+    var _h=5381,_s='BrK9Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_9','v'+Math.abs(_h).toString(36));
     document.getElementById('overlay').classList.add('show');
   } else {
     alert('❌ Contraseña incorrecta.\nPista: usa atob() en la consola para decodificar el valor Base64.');

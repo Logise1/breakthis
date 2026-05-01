@@ -188,7 +188,7 @@
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
       if (p === 'SecureCorp2024!') {
-        localStorage.setItem('breakthis_1', 'completed');
+        var _h=5381,_s='BrK1Th!s_x9';for(var _i=0;_i<_s.length;_i++){_h=((_h<<5)+_h)+_s.charCodeAt(_i);_h=_h&_h}localStorage.setItem('breakthis_1','v'+Math.abs(_h).toString(36));
         document.getElementById('successOverlay').classList.add('show');
       } else {
         const err = document.getElementById('error');
