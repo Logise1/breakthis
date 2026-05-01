@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BREAK THIS — Hacking Challenges</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#07070d;color:#e0e0e0;font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+.scanlines{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.015) 2px,rgba(0,255,136,0.015) 4px)}
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);
+  background-size:60px 60px;z-index:0}
+header{position:relative;z-index:10;text-align:center;padding:60px 20px 30px}
+.glitch{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:#00ff88;
+  text-shadow:0 0 10px #00ff88,0 0 40px #00ff8855,0 0 80px #00ff8822;position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%}
+.glitch::before{animation:glitch1 3s infinite;color:#ff0055;clip-path:inset(0 0 80% 0);transform:translate(-3px)}
+.glitch::after{animation:glitch2 3s infinite;color:#00d4ff;clip-path:inset(80% 0 0 0);transform:translate(3px)}
+@keyframes glitch1{0%,95%{clip-path:inset(0 0 85% 0)}96%{clip-path:inset(20% 0 50% 0)}97%{clip-path:inset(60% 0 10% 0)}100%{clip-path:inset(0 0 85% 0)}}
+@keyframes glitch2{0%,95%{clip-path:inset(85% 0 0 0)}96%{clip-path:inset(10% 0 60% 0)}97%{clip-path:inset(50% 0 20% 0)}100%{clip-path:inset(85% 0 0 0)}}
+.subtitle{font-family:'Share Tech Mono',monospace;color:#00d4ff;font-size:1rem;margin-top:10px;opacity:0.8;letter-spacing:3px}
+.progress-section{position:relative;z-index:10;max-width:700px;margin:20px auto;padding:0 20px}
+.progress-bar-bg{background:rgba(255,255,255,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:20px;height:28px;overflow:hidden;position:relative}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#00ff88,#00d4ff);border-radius:20px;transition:width 0.8s cubic-bezier(.4,0,.2,1);position:relative}
+.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.progress-text{font-family:'Share Tech Mono',monospace;text-align:center;margin-top:8px;color:#00ff88;font-size:0.85rem}
+.grid{position:relative;z-index:10;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;
+  max-width:1100px;margin:30px auto;padding:0 20px 60px}
+.card{background:rgba(12,12,22,0.85);border:1px solid rgba(0,255,136,0.12);border-radius:16px;padding:24px;
+  position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(.4,0,.2,1);cursor:default}
+.card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,#00ff88,transparent);opacity:0;transition:opacity 0.3s}
+.card.unlocked{cursor:pointer;border-color:rgba(0,255,136,0.25)}
+.card.unlocked:hover{transform:translateY(-4px);border-color:#00ff88;box-shadow:0 8px 30px rgba(0,255,136,0.15)}
+.card.unlocked:hover::before{opacity:1}
+.card.completed{border-color:rgba(0,212,255,0.3)}
+.card.locked{opacity:0.4;filter:grayscale(0.5)}
+.card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.card-num{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:900;min-width:40px}
+.card.unlocked .card-num{color:#00ff88}
+.card.completed .card-num{color:#00d4ff}
+.card.locked .card-num{color:#333}
+.card-status{margin-left:auto;font-size:1.2rem}
+.card-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:6px}
+.card.unlocked .card-title{color:#e0e0e0}
+.card.completed .card-title{color:#00d4ff}
+.card.locked .card-title{color:#444}
+.card-desc{font-size:0.85rem;color:#888;line-height:1.5;margin-bottom:14px}
+.card.locked .card-desc{color:#333}
+.difficulty{display:flex;gap:3px;margin-bottom:12px}
+.diff-bar{width:20px;height:5px;border-radius:3px;background:#1a1a2e}
+.diff-bar.active{background:#00ff88}
+.diff-bar.active.med{background:#ffaa00}
+.diff-bar.active.hard{background:#ff4444}
+.card-btn{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:0.8rem;padding:8px 20px;
+  border:1px solid #00ff88;color:#00ff88;background:transparent;border-radius:8px;letter-spacing:2px;
+  cursor:pointer;transition:all 0.3s;text-transform:uppercase}
+.card-btn:hover{background:#00ff88;color:#07070d}
+.card.completed .card-btn{border-color:#00d4ff;color:#00d4ff}
+.card.completed .card-btn:hover{background:#00d4ff;color:#07070d}
+.card.locked .card-btn{display:none}
+.lock-icon{font-size:2rem;color:#333;text-align:center;margin:10px 0}
+.reset-section{text-align:center;padding:0 20px 50px;position:relative;z-index:10}
+.reset-btn{font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:8px 24px;border:1px solid #ff005533;
+  color:#ff005577;background:transparent;border-radius:8px;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
+.reset-btn:hover{border-color:#ff0055;color:#ff0055}
+footer{text-align:center;padding:20px;color:#333;font-family:'Share Tech Mono',monospace;font-size:0.7rem;position:relative;z-index:10}
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="bg-grid"></div>
+
+<header>
+  <h1 class="glitch" data-text="BREAK THIS">BREAK THIS</h1>
+  <p class="subtitle">// 15 DESAFÍOS DE HACKING WEB //</p>
+</header>
+
+<div class="progress-section">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <p class="progress-text" id="progressText">0 / 15 completados</p>
+</div>
+
+<div class="grid" id="challengeGrid"></div>
+
+<div class="reset-section">
+  <button class="reset-btn" onclick="if(confirm('¿Reiniciar todo el progreso?')){localStorage.clear();location.reload()}">[RESET PROGRESO]</button>
+</div>
+
+<footer>&lt;/&gt; BREAK THIS v1.0 — Aprende hacking web rompiendo cosas</footer>
+
+<script>
+const challenges = [
+  {id:1,title:"Inspección Básica",desc:"Un login corporativo. La contraseña está más cerca de lo que crees...",diff:1,type:"Login corporativo"},
+  {id:2,title:"Variables Expuestas",desc:"El desarrollador dejó las credenciales en el código JavaScript.",diff:1,type:"Blog login"},
+  {id:3,title:"El Botón Fantasma",desc:"Hay un botón de acceso oculto en algún lugar de la página.",diff:2,type:"Página premium"},
+  {id:4,title:"Desactivado",desc:"El botón de envío está desactivado. ¿Puedes reactivarlo?",diff:2,type:"Registro"},
+  {id:5,title:"Validación Rota",desc:"La función de validación siempre devuelve false. Cámbiala.",diff:2,type:"Formulario de acceso"},
+  {id:6,title:"Cookie Monster",desc:"El servidor comprueba una cookie para saber si eres admin.",diff:3,type:"Panel de control"},
+  {id:7,title:"Token Falsificado",desc:"La app guarda tu sesión en localStorage. Falsifica el token.",diff:3,type:"Portal bancario"},
+  {id:8,title:"Escalada de Privilegios",desc:"Eres un usuario 'viewer'. Necesitas ser 'admin'.",diff:3,type:"Foro"},
+  {id:9,title:"Mensaje Cifrado",desc:"La contraseña está codificada en Base64 en el código fuente.",diff:3,type:"Chat cifrado"},
+  {id:10,title:"Contra Reloj",desc:"La bóveda se abre en 5 minutos. ¿O puedes acelerar el tiempo?",diff:4,type:"Bóveda digital"},
+  {id:11,title:"El Interceptor",desc:"La API dice que no estás autorizado. Intercepta la respuesta.",diff:4,type:"API Dashboard"},
+  {id:12,title:"Prototipo Envenenado",desc:"Usa prototype pollution para obtener privilegios de admin.",diff:4,type:"Consola dev"},
+  {id:13,title:"El Escapista",desc:"Estás en un sandbox. Encuentra la forma de escapar.",diff:5,type:"Terminal restringida"},
+  {id:14,title:"Ingeniería Inversa",desc:"El password se genera con una función ofuscada. Descifrala.",diff:5,type:"Sistema de seguridad"},
+  {id:15,title:"Jefe Final",desc:"Todo lo aprendido en un solo desafío. Múltiples capas de seguridad.",diff:5,type:"Fortaleza digital"}
+];
+
+function isCompleted(id){return localStorage.getItem('breakthis_'+id)==='completed'}
+function isUnlocked(id){return id===1||isCompleted(id-1)}
+function getCompletedCount(){return challenges.filter(c=>isCompleted(c.id)).length}
+
+function renderGrid(){
+  const grid=document.getElementById('challengeGrid');
+  grid.innerHTML='';
+  challenges.forEach(c=>{
+    const completed=isCompleted(c.id), unlocked=isUnlocked(c.id);
+    const state=completed?'completed':(unlocked?'unlocked':'locked');
+    const card=document.createElement('div');
+    card.className='card '+state;
+    
+    let diffBars='';
+    for(let i=1;i<=5;i++){
+      let cls='diff-bar';
+      if(i<=c.diff){cls+=' active';if(c.diff>=4)cls+=' hard';else if(c.diff>=3)cls+=' med'}
+      diffBars+=`<div class="${cls}"></div>`;
+    }
+    
+    const statusIcon=completed?'✅':(unlocked?'🔓':'🔒');
+    card.innerHTML=`
+      <div class="card-header">
+        <span class="card-num">#${String(c.id).padStart(2,'0')}</span>
+        <span style="font-size:0.7rem;color:#666;font-family:'Share Tech Mono',monospace">${c.type.toUpperCase()}</span>
+        <span class="card-status">${statusIcon}</span>
+      </div>
+      <div class="card-title">${c.title}</div>
+      <div class="difficulty">${diffBars}</div>
+      <div class="card-desc">${unlocked?c.desc:'[BLOQUEADO] Completa el reto anterior para desbloquear.'}</div>
+      ${unlocked?`<button class="card-btn" onclick="window.open('tests/test${c.id}.html','_blank')">${completed?'REPETIR':'LANZAR'}</button>`:'<div class="lock-icon">🔒</div>'}
+    `;
+    grid.appendChild(card);
+  });
+  const count=getCompletedCount();
+  document.getElementById('progressFill').style.width=(count/15*100)+'%';
+  document.getElementById('progressText').textContent=count+' / 15 completados';
+}
+renderGrid();
+window.addEventListener('focus',renderGrid);
+window.addEventListener('storage',renderGrid);
+</script>
+</body>
+</html>
