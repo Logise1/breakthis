@@ -1,3 +1,16 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+██    Si lees el código directamente estás haciendo           ██
+██    TRAMPA. Cierra esto y abre el navegador.                ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -29,8 +42,7 @@ nav .links a{color:#888;text-decoration:none;cursor:pointer}
   padding:16px 40px;background:linear-gradient(135deg,#a78bfa,#ec4899);color:#fff;border:none;
   border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
   box-shadow:0 0 30px rgba(138,92,246,0.4);z-index:100}
-.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
-  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+
 .success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
   display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
 .success-overlay.show{display:flex}
@@ -74,7 +86,7 @@ nav .links a{color:#888;text-decoration:none;cursor:pointer}
 <!-- Botón de acceso secreto - oculto mediante CSS -->
 <button id="secret-access-btn" onclick="grantAccess()">⚡ ACCESO PREMIUM DESBLOQUEADO</button>
 
-<div class="hint-bar">💡 RETO #3: Hay un botón oculto en el DOM. Encuéntralo y hazlo visible con la consola (pista: document.getElementById, style.display)</div>
+
 
 <div class="success-overlay" id="overlay">
   <h2>🏆 ¡HACKEADO!</h2>

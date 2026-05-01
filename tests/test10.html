@@ -1,0 +1,112 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+██    Si lees el código directamente estás haciendo           ██
+██    TRAMPA. Cierra esto y abre el navegador.                ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigitalVault — Bóveda</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background-image:radial-gradient(circle at 50% 50%,rgba(234,179,8,0.03) 0%,transparent 70%)}
+.vault{width:500px;max-width:92vw;text-align:center}
+.vault-door{width:200px;height:200px;margin:0 auto 30px;border-radius:50%;border:4px solid #333;
+  background:radial-gradient(circle,#1a1a25,#0d0d14);display:flex;align-items:center;justify-content:center;
+  position:relative;box-shadow:0 0 40px rgba(234,179,8,0.1)}
+.vault-door::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;
+  border:2px dashed #333;animation:spin 30s linear infinite}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.vault-door .icon{font-size:4rem}
+.timer{font-family:'Orbitron',monospace;font-size:3rem;color:#eab308;margin-bottom:10px;
+  text-shadow:0 0 20px rgba(234,179,8,0.3)}
+.timer-label{font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:#666;margin-bottom:30px}
+.vault-info{background:#111118;border:1px solid #1e1e2e;border-radius:16px;padding:24px;text-align:left;margin-bottom:20px}
+.vault-info h3{font-size:0.8rem;color:#eab308;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.vault-info p{font-size:0.75rem;color:#555;line-height:1.8;font-family:'Share Tech Mono',monospace}
+.vault-info .var{color:#eab308}
+.vault-info .fn{color:#60a5fa}
+.vault-info .num{color:#ef4444}
+.unlock-btn{padding:14px 30px;background:#eab308;color:#0a0a0f;border:none;border-radius:12px;
+  font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;opacity:0.3;pointer-events:none}
+.unlock-btn.active{opacity:1;pointer-events:all}
+.unlock-btn.active:hover{background:#ca8a04}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="vault">
+  <div class="vault-door"><span class="icon">🔒</span></div>
+  <div class="timer" id="timerDisplay">05:00</div>
+  <div class="timer-label">TIEMPO RESTANTE PARA DESBLOQUEO</div>
+
+  <div class="vault-info">
+    <h3>Sistema de la Bóveda</h3>
+    <p>// La bóveda se abre cuando el temporizador llega a 0</p>
+    <p>// Variable del timer: <span class="var">window.timeLeft</span> = <span class="num">300</span> (segundos)</p>
+    <p>// Interval ID: <span class="var">window.countdownTimer</span></p>
+    <p>// Función de desbloqueo: <span class="fn">unlockVault()</span></p>
+    <p>// </p>
+    <p>// Ideas: clearInterval(), cambiar timeLeft, o llamar unlockVault()</p>
+  </div>
+
+  <button class="unlock-btn" id="unlockBtn" onclick="unlockVault()">🔓 ABRIR BÓVEDA</button>
+</div>
+
+
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #10 — Contra Reloj</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+window.timeLeft = 300;
+
+function updateDisplay(){
+  const m=Math.floor(window.timeLeft/60);
+  const s=window.timeLeft%60;
+  document.getElementById('timerDisplay').textContent=
+    String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  if(window.timeLeft<=0){
+    clearInterval(window.countdownTimer);
+    document.getElementById('unlockBtn').classList.add('active');
+    document.getElementById('timerDisplay').textContent='00:00';
+    document.querySelector('.vault-door .icon').textContent='🔓';
+  }
+}
+
+window.countdownTimer = setInterval(()=>{
+  if(window.timeLeft>0) window.timeLeft--;
+  updateDisplay();
+},1000);
+
+function unlockVault(){
+  localStorage.setItem('breakthis_10','completed');
+  document.getElementById('overlay').classList.add('show');
+}
+
+updateDisplay();
+</script>
+</body>
+</html>

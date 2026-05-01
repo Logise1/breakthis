@@ -1,0 +1,122 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+██    Si lees el código directamente estás haciendo           ██
+██    TRAMPA. Cierra esto y abre el navegador.                ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoBank — Banca Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#020617;color:#e2e8f0;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 30px;
+  background:linear-gradient(90deg,#020617,#0f172a);border-bottom:1px solid #1e293b}
+.header h1{font-size:1.2rem;font-weight:800;color:#22d3ee}
+.header .status{font-size:0.75rem;color:#ef4444;font-family:monospace}
+.main{max-width:700px;margin:50px auto;padding:0 20px}
+.alert-box{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:16px;
+  padding:30px;text-align:center;margin-bottom:24px}
+.alert-box h2{color:#ef4444;font-size:1.3rem;margin-bottom:8px}
+.alert-box p{color:#94a3b8;font-size:0.85rem;line-height:1.6}
+.verify-btn{margin-top:16px;padding:12px 30px;background:#22d3ee;color:#020617;border:none;border-radius:10px;
+  font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+.verify-btn:hover{background:#06b6d4}
+.panel{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:20px;margin-bottom:16px}
+.panel h3{font-size:0.8rem;color:#22d3ee;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.panel pre{font-family:monospace;font-size:0.75rem;color:#64748b;background:#020617;padding:12px;
+  border-radius:8px;overflow-x:auto;line-height:1.6}
+.panel pre .key{color:#22d3ee}
+.panel pre .val{color:#fbbf24}
+.panel pre .str{color:#a78bfa}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💳 NeoBank</h1>
+  <span class="status" id="authStatus">● NO AUTENTICADO</span>
+</div>
+
+<div class="main">
+  <div class="alert-box">
+    <h2>🔐 Sesión No Válida</h2>
+    <p>Tu token de autenticación no es válido o ha expirado.<br>
+       El sistema utiliza localStorage para gestionar sesiones.</p>
+    <button class="verify-btn" onclick="verifySession()">Verificar Sesión</button>
+  </div>
+
+  <div class="panel">
+    <h3>Token Requerido (localStorage)</h3>
+    <pre><span class="key">Key:</span> <span class="str">"neobank_session"</span>
+
+<span class="key">Value (JSON):</span>
+{
+  <span class="key">"user"</span>: <span class="str">"admin"</span>,
+  <span class="key">"role"</span>: <span class="str">"superuser"</span>,
+  <span class="key">"authenticated"</span>: <span class="val">true</span>
+}</pre>
+  </div>
+
+  <div class="panel">
+    <h3>Token Actual</h3>
+    <pre id="currentToken">// localStorage.getItem("neobank_session")
+// Resultado: null</pre>
+  </div>
+</div>
+
+
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #7 — Token Falsificado</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function updateTokenDisplay(){
+  const token=localStorage.getItem('neobank_session');
+  document.getElementById('currentToken').textContent=
+    '// localStorage.getItem("neobank_session")\n// Resultado: '+(token||'null');
+}
+
+function verifySession(){
+  updateTokenDisplay();
+  try{
+    const raw=localStorage.getItem('neobank_session');
+    if(!raw){alert('❌ No hay token en localStorage');return}
+    const token=JSON.parse(raw);
+    if(token.user==='admin'&&token.role==='superuser'&&token.authenticated===true){
+      localStorage.setItem('breakthis_7','completed');
+      document.getElementById('overlay').classList.add('show');
+    } else {
+      alert('❌ Token inválido. Verifica los campos: user, role, authenticated');
+    }
+  }catch(e){
+    alert('❌ Error parseando el token. Asegúrate de que es JSON válido.');
+  }
+}
+
+setInterval(updateTokenDisplay,1000);
+updateTokenDisplay();
+</script>
+</body>
+</html>

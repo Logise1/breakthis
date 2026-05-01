@@ -1,0 +1,134 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+██    Si lees el código directamente estás haciendo           ██
+██    TRAMPA. Cierra esto y abre el navegador.                ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevForum — Comunidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#1a1a2e;color:#e0e0e0;min-height:100vh}
+.navbar{display:flex;align-items:center;gap:20px;padding:12px 30px;background:#16213e;border-bottom:1px solid #0f3460}
+.navbar h1{font-size:1.1rem;font-weight:700;color:#e94560}
+.navbar .nav-links{display:flex;gap:16px;font-size:0.85rem;margin-left:20px}
+.navbar .nav-links a{color:#888;text-decoration:none;cursor:pointer}
+.navbar .user-info{margin-left:auto;display:flex;align-items:center;gap:10px}
+.navbar .user-info .avatar{width:32px;height:32px;border-radius:50%;background:#0f3460;display:flex;align-items:center;justify-content:center;font-size:0.8rem}
+.navbar .role-tag{font-size:0.7rem;padding:3px 8px;border-radius:4px;font-weight:600}
+.navbar .role-tag.viewer{background:rgba(148,163,184,0.2);color:#94a3b8}
+.navbar .role-tag.admin{background:rgba(233,69,96,0.2);color:#e94560}
+.container{max-width:800px;margin:30px auto;padding:0 20px}
+.thread{background:#16213e;border:1px solid #0f3460;border-radius:12px;padding:20px;margin-bottom:16px}
+.thread-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.thread-header .tag{font-size:0.65rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.thread-header .tag.general{background:rgba(96,165,250,0.2);color:#60a5fa}
+.thread-header .tag.admin-only{background:rgba(233,69,96,0.2);color:#e94560}
+.thread h3{font-size:1rem;color:#e0e0e0;margin-bottom:6px}
+.thread p{font-size:0.85rem;color:#666;line-height:1.5}
+.thread .meta{font-size:0.7rem;color:#444;margin-top:8px}
+.admin-section{background:rgba(233,69,96,0.05);border:1px solid rgba(233,69,96,0.2);border-radius:12px;
+  padding:30px;text-align:center;margin-top:20px}
+.admin-section h2{color:#e94560;margin-bottom:8px}
+.admin-section p{color:#888;font-size:0.85rem;margin-bottom:16px}
+.admin-btn{padding:12px 24px;background:#e94560;color:#fff;border:none;border-radius:10px;
+  font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+.admin-btn:hover{background:#c93650}
+.console-box{background:#0a0a14;border:1px solid #222;border-radius:8px;padding:14px;margin-top:16px;
+  font-family:monospace;font-size:0.75rem;color:#666;line-height:1.8}
+.console-box .var{color:#e94560}
+.console-box .fn{color:#60a5fa}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>💬 DevForum</h1>
+  <div class="nav-links"><a>Inicio</a><a>Temas</a><a>Usuarios</a></div>
+  <div class="user-info">
+    <div class="avatar">👤</div>
+    <span style="font-size:0.85rem" id="userName">invitado_42</span>
+    <span class="role-tag viewer" id="roleTag">VIEWER</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="thread">
+    <div class="thread-header"><span class="tag general">General</span></div>
+    <h3>Bienvenidos al foro de desarrollo</h3>
+    <p>Este es el espacio para compartir conocimientos sobre programación y seguridad.</p>
+    <div class="meta">Por admin_root · hace 2 horas · 15 respuestas</div>
+  </div>
+  <div class="thread">
+    <div class="thread-header"><span class="tag general">General</span></div>
+    <h3>¿Cómo empezar con pentesting?</h3>
+    <p>Recomendaciones de recursos y herramientas para principiantes en seguridad informática.</p>
+    <div class="meta">Por h4cker_n00b · hace 5 horas · 23 respuestas</div>
+  </div>
+  <div class="thread">
+    <div class="thread-header"><span class="tag admin-only">🔒 Admin Only</span></div>
+    <h3>[RESTRINGIDO] Panel de configuración del foro</h3>
+    <p>Solo los administradores pueden acceder a esta sección.</p>
+    <div class="meta">Por system · hace 1 día</div>
+  </div>
+
+  <div class="admin-section">
+    <h2>⚠️ Zona de Administración</h2>
+    <p>Tu rol actual es <strong>"viewer"</strong>. Necesitas ser <strong>"admin"</strong> para acceder.</p>
+    <button class="admin-btn" onclick="checkPermissions()">Comprobar Permisos</button>
+  </div>
+
+  <div class="console-box">
+    <p>// Objeto de usuario actual:</p>
+    <p><span class="var">window.currentUser</span> = {</p>
+    <p>&nbsp;&nbsp;name: "invitado_42",</p>
+    <p>&nbsp;&nbsp;role: "viewer"  // ← cambia esto a "admin"</p>
+    <p>}</p>
+    <p>// Luego llama: <span class="fn">checkPermissions()</span></p>
+  </div>
+</div>
+
+
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #8 — Escalada de Privilegios</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+window.currentUser = {
+  name: "invitado_42",
+  role: "viewer"
+};
+
+function checkPermissions(){
+  if(window.currentUser && window.currentUser.role === "admin"){
+    localStorage.setItem('breakthis_8','completed');
+    document.getElementById('overlay').classList.add('show');
+  } else {
+    alert('❌ Acceso denegado. Tu rol es: "' + (window.currentUser?window.currentUser.role:'undefined') + '".\nNecesitas: "admin"');
+  }
+}
+</script>
+</body>
+</html>
