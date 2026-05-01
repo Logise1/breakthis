@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Break This — Soluciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--card:#141414;--border:#222;--text:#ededed;--muted:#888;--accent:#00ff88;--code-bg:#0d0d0d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding:40px 20px 80px}
+.container{max-width:800px;margin:0 auto}
+h1{font-size:2rem;font-weight:700;text-align:center;margin-bottom:6px}
+.sub{text-align:center;color:var(--muted);margin-bottom:40px;font-size:0.9rem}
+.warn{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;
+  padding:16px 20px;margin-bottom:30px;font-size:0.85rem;color:#fca5a5;text-align:center}
+.challenge{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden}
+.challenge-header{padding:18px 24px;cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:background 0.2s;user-select:none}
+.challenge-header:hover{background:#1a1a1a}
+.num{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);min-width:24px}
+.title{font-weight:600;font-size:1rem;flex:1}
+.diff{display:flex;gap:3px}
+.diff span{width:6px;height:6px;border-radius:50%;background:#333}
+.diff span.on{background:var(--accent)}
+.arrow{color:var(--muted);transition:transform 0.3s;font-size:0.8rem}
+.challenge.open .arrow{transform:rotate(90deg)}
+.challenge-body{display:none;padding:0 24px 20px;border-top:1px solid var(--border)}
+.challenge.open .challenge-body{display:block}
+.step{margin-top:16px}
+.step-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:6px;font-weight:600}
+.step p{font-size:0.85rem;color:#ccc;line-height:1.6;margin-bottom:8px}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:#e0e0e0;overflow-x:auto;
+  line-height:1.7;margin-bottom:8px;white-space:pre-wrap;word-break:break-all}
+pre .comment{color:#555}
+pre .keyword{color:#c792ea}
+pre .string{color:#c3e88d}
+pre .fn{color:#82aaff}
+pre .val{color:#f78c6c}
+.tag{display:inline-block;font-size:0.65rem;padding:2px 8px;border-radius:4px;font-weight:600;margin-bottom:8px}
+.tag.local{background:rgba(0,255,136,0.1);color:#00ff88}
+.tag.api{background:rgba(96,165,250,0.1);color:#60a5fa}
+footer{text-align:center;color:#333;font-size:0.8rem;margin-top:40px;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔓 Soluciones</h1>
+  <p class="sub">Guía paso a paso para cada reto de Break This</p>
+  <div class="warn">⚠️ SPOILERS — No leas esto si quieres resolver los retos por ti mismo</div>
+
+  <!-- RETO 1 -->
+  <div class="challenge" id="c1">
+    <div class="challenge-header" onclick="toggle('c1')">
+      <span class="num">01</span>
+      <span class="title">Inspección Básica</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La contraseña está escondida en un comentario HTML del código fuente.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Abre DevTools (F12) → pestaña <strong>Elements</strong></p>
+        <p>2. Busca el comentario HTML que dice <code>DEBUG CREDENTIALS</code></p>
+        <p>3. La contraseña es:</p>
+<pre><span class="string">SecureCorp2024!</span></pre>
+        <p>4. Escríbela en el campo de contraseña y haz clic en "Iniciar Sesión".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 2 -->
+  <div class="challenge" id="c2">
+    <div class="challenge-header" onclick="toggle('c2')">
+      <span class="num">02</span>
+      <span class="title">Variables Expuestas</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>Las credenciales están guardadas en variables JavaScript globales.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Abre la consola (F12 → Console)</p>
+        <p>2. Escribe:</p>
+<pre><span class="fn">ADMIN_PASSWORD</span></pre>
+        <p>3. La consola mostrará: <code>Byt3Bl0g_S3cr3t!</code></p>
+        <p>4. Úsala para hacer login.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 3 -->
+  <div class="challenge" id="c3">
+    <div class="challenge-header" onclick="toggle('c3')">
+      <span class="num">03</span>
+      <span class="title">El Botón Fantasma</span>
+      <span class="tag api">BACKEND</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>Hay un botón oculto con <code>display: none</code> en el CSS.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Abre la consola y escribe:</p>
+<pre><span class="keyword">document</span>.<span class="fn">getElementById</span>(<span class="string">'secret-access-btn'</span>).<span class="fn">style</span>.<span class="fn">display</span> = <span class="string">'block'</span></pre>
+        <p>2. El botón aparecerá abajo de la página. Haz clic en él.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 4 -->
+  <div class="challenge" id="c4">
+    <div class="challenge-header" onclick="toggle('c4')">
+      <span class="num">04</span>
+      <span class="title">Desactivado</span>
+      <span class="tag api">BACKEND</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El botón de registro tiene el atributo HTML <code>disabled</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Abre la consola y escribe:</p>
+<pre><span class="keyword">document</span>.<span class="fn">getElementById</span>(<span class="string">'registerBtn'</span>).<span class="fn">disabled</span> = <span class="val">false</span></pre>
+        <p>2. El botón se activa. Haz clic en "Registrarse".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 5 -->
+  <div class="challenge" id="c5">
+    <div class="challenge-header" onclick="toggle('c5')">
+      <span class="num">05</span>
+      <span class="title">Validación Rota</span>
+      <span class="tag api">BACKEND</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La función <code>validateAccess()</code> siempre devuelve <code>false</code>. Hay que redefinirla.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. En la consola, redefine la función:</p>
+<pre><span class="fn">validateAccess</span> = <span class="keyword">function</span>() { <span class="keyword">return</span> <span class="val">true</span> }</pre>
+        <p>2. Haz clic en "Verificar Acceso" (puedes escribir cualquier cosa).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 6 -->
+  <div class="challenge" id="c6">
+    <div class="challenge-header" onclick="toggle('c6')">
+      <span class="num">06</span>
+      <span class="title">Cookie Monster</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El valor de la cookie no es "admin". Está oculto en los <strong>headers de respuesta</strong> de un endpoint de la API.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 1 — Obtener el valor secreto</div>
+<pre><span class="fn">fetch</span>(<span class="string">'https://breakthis.logise1123.workers.dev/api/level/6/config'</span>)
+  .<span class="fn">then</span>(r => {
+    <span class="fn">console.log</span>(r.<span class="fn">headers</span>.<span class="fn">get</span>(<span class="string">'X-Admin-Cookie-Value'</span>))
+    <span class="comment">// Resultado: xK9_r00t_4cc3ss</span>
+  })</pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 2 — Establecer la cookie</div>
+<pre><span class="keyword">document</span>.<span class="fn">cookie</span> = <span class="string">"role=xK9_r00t_4cc3ss"</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 3</div>
+        <p>Haz clic en "Verificar Permisos".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 7 -->
+  <div class="challenge" id="c7">
+    <div class="challenge-header" onclick="toggle('c7')">
+      <span class="num">07</span>
+      <span class="title">Token Falsificado</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El token necesita un campo <code>pin</code> que solo el servidor conoce. Se obtiene con un header <code>Authorization</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 1 — Obtener el pin</div>
+<pre><span class="fn">fetch</span>(<span class="string">'https://breakthis.logise1123.workers.dev/api/level/7/pin'</span>, {
+  <span class="fn">headers</span>: { <span class="string">'Authorization'</span>: <span class="string">'Bearer breakthis'</span> }
+}).<span class="fn">then</span>(r=>r.<span class="fn">json</span>()).<span class="fn">then</span>(<span class="fn">console.log</span>)
+<span class="comment">// Resultado: { pin: 7341 }</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 2 — Crear el token en localStorage</div>
+<pre><span class="keyword">localStorage</span>.<span class="fn">setItem</span>(<span class="string">'neobank_session'</span>,
+  <span class="keyword">JSON</span>.<span class="fn">stringify</span>({
+    <span class="fn">user</span>: <span class="string">"admin"</span>,
+    <span class="fn">role</span>: <span class="string">"superuser"</span>,
+    <span class="fn">pin</span>: <span class="val">7341</span>
+  })
+)</pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 3</div>
+        <p>Haz clic en "Verificar Sesión".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 8 -->
+  <div class="challenge" id="c8">
+    <div class="challenge-header" onclick="toggle('c8')">
+      <span class="num">08</span>
+      <span class="title">Escalada de Privilegios</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>Cambiar el rol a "admin" no basta. También necesitas un código de acceso del servidor.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 1 — Cambiar el rol</div>
+<pre><span class="keyword">window</span>.<span class="fn">currentUser</span>.<span class="fn">role</span> = <span class="string">"admin"</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 2 — Obtener el código de acceso</div>
+<pre><span class="fn">fetch</span>(<span class="string">'https://breakthis.logise1123.workers.dev/api/level/8/access-code'</span>, {
+  <span class="fn">method</span>: <span class="string">'POST'</span>,
+  <span class="fn">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="fn">body</span>: <span class="keyword">JSON</span>.<span class="fn">stringify</span>({ <span class="fn">role</span>: <span class="string">"admin"</span> })
+}).<span class="fn">then</span>(r=>r.<span class="fn">json</span>()).<span class="fn">then</span>(<span class="fn">console.log</span>)
+<span class="comment">// Resultado: { access_code: "pr1v_3sc_x7" }</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 3 — Guardar el código</div>
+<pre><span class="keyword">window</span>.<span class="fn">accessCode</span> = <span class="string">"pr1v_3sc_x7"</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 4</div>
+        <p>Haz clic en "Comprobar Permisos".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 9 -->
+  <div class="challenge" id="c9">
+    <div class="challenge-header" onclick="toggle('c9')">
+      <span class="num">09</span>
+      <span class="title">Mensaje Cifrado</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La contraseña no está en el HTML. Hay que pedirla al servidor (codificada en Base64) y decodificarla.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 1 — Obtener el cipher</div>
+<pre><span class="fn">fetch</span>(<span class="string">'https://breakthis.logise1123.workers.dev/api/level/9/cipher'</span>)
+  .<span class="fn">then</span>(r=>r.<span class="fn">json</span>()).<span class="fn">then</span>(<span class="fn">console.log</span>)
+<span class="comment">// Resultado: { cipher: "U2g0ZDB3X1ByMHQwYzBsIQ==", encoding: "base64" }</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 2 — Decodificar</div>
+<pre><span class="fn">atob</span>(<span class="string">"U2g0ZDB3X1ByMHQwYzBsIQ=="</span>)
+<span class="comment">// Resultado: "Sh4d0w_Pr0t0c0l!"</span></pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Paso 3</div>
+        <p>Introduce <code>Sh4d0w_Pr0t0c0l!</code> en el campo de contraseña y pulsa Enter.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 10 -->
+  <div class="challenge" id="c10">
+    <div class="challenge-header" onclick="toggle('c10')">
+      <span class="num">10</span>
+      <span class="title">Contra Reloj</span>
+      <span class="tag api">BACKEND</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>Un temporizador de 5 minutos bloquea el acceso. Hay múltiples formas de saltarlo.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Opción A — Llamar directamente a la función</div>
+<pre><span class="fn">unlockVault</span>()</pre>
+      </div>
+      <div class="step">
+        <div class="step-label">Opción B — Poner el timer a 0</div>
+<pre><span class="keyword">window</span>.<span class="fn">timeLeft</span> = <span class="val">0</span></pre>
+        <p>Espera 1 segundo a que se actualice y haz clic en "Abrir Bóveda".</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Opción C — Parar el timer y forzar</div>
+<pre><span class="fn">clearInterval</span>(<span class="keyword">window</span>.<span class="fn">countdownTimer</span>)
+<span class="keyword">window</span>.<span class="fn">timeLeft</span> = <span class="val">0</span>
+<span class="fn">unlockVault</span>()</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Break This — Soluciones v1.0</footer>
+
+<script>
+function toggle(id){document.getElementById(id).classList.toggle('open')}
+</script>
+</body>
+</html>
