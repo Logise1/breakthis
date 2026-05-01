@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureCorp — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f0f2f5;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);padding:50px 40px;width:400px;max-width:90vw}
+.logo{text-align:center;margin-bottom:30px}
+.logo h1{font-size:1.6rem;color:#1a1a2e;font-weight:700}
+.logo span{color:#4361ee}
+.logo p{color:#888;font-size:0.8rem;margin-top:4px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:0.85rem;color:#555;margin-bottom:6px;font-weight:600}
+.form-group input{width:100%;padding:12px 16px;border:2px solid #e0e0e0;border-radius:10px;font-size:0.95rem;
+  font-family:'Inter',sans-serif;transition:border-color 0.3s;outline:none}
+.form-group input:focus{border-color:#4361ee}
+.login-btn{width:100%;padding:14px;background:#4361ee;color:#fff;border:none;border-radius:10px;
+  font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.3s;font-family:'Inter',sans-serif}
+.login-btn:hover{background:#3451d1}
+.error{color:#e74c3c;font-size:0.8rem;margin-top:10px;text-align:center;display:none}
+.hint-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#00ff88;
+  font-family:monospace;font-size:0.8rem;padding:10px 20px;text-align:center}
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);
+  display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;font-family:'Inter',sans-serif;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px;font-size:1rem}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<!-- DEBUG CREDENTIALS
+     Usuario: admin
+     Contraseña: SecureCorp2024!
+     TODO: Eliminar este comentario antes de producción
+-->
+
+<div class="login-box">
+  <div class="logo">
+    <h1><span>Secure</span>Corp</h1>
+    <p>Portal de empleados — Acceso seguro</p>
+  </div>
+  <div class="form-group">
+    <label>Usuario</label>
+    <input type="text" id="username" placeholder="tu.nombre@securecorp.com">
+  </div>
+  <div class="form-group">
+    <label>Contraseña</label>
+    <input type="password" id="password" placeholder="••••••••">
+  </div>
+  <button class="login-btn" onclick="tryLogin()">Iniciar Sesión</button>
+  <p class="error" id="error">❌ Credenciales incorrectas</p>
+</div>
+
+<div class="hint-bar">💡 RETO #1: Encuentra las credenciales ocultas en el código fuente de esta página</div>
+
+<div class="success-overlay" id="successOverlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #1 — Inspección Básica</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function tryLogin(){
+  const u=document.getElementById('username').value;
+  const p=document.getElementById('password').value;
+  if(p==='SecureCorp2024!'){
+    localStorage.setItem('breakthis_1','completed');
+    document.getElementById('successOverlay').classList.add('show');
+  } else {
+    const err=document.getElementById('error');
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',3000);
+  }
+}
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin()});
+</script>
+</body>
+</html>
