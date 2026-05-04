@@ -1,0 +1,81 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Firma Vacía</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#050505;color:#e0e0e0;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{background:#111;border:1px solid #333;border-radius:12px;padding:30px;width:100%;max-width:450px;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+h2{margin-bottom:20px;font-weight:600;color:#fff;}
+.jwt-box{background:#1a1a1a;border:1px solid #444;border-radius:8px;padding:15px;margin-bottom:20px;word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#9ca3af;position:relative}
+.jwt-box::before{content:'JWT ACTUAL';position:absolute;top:-10px;left:10px;background:#111;padding:0 5px;font-size:0.7rem;color:#6b7280;font-weight:bold}
+.btn{width:100%;padding:12px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.btn:hover{background:#2563eb}
+.log{margin-top:15px;font-size:0.85rem;color:#ef4444;min-height:20px;text-align:center}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Acceso Restringido</h2>
+  <div class="jwt-box" id="jwtDisplay">...</div>
+  <button class="btn" onclick="checkAccess()">VERIFICAR ACCESO</button>
+  <div class="log" id="logMsg"></div>
+</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #11 — Firma Vacía</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+// El token inicial te da rol 'user'
+const header = btoa(JSON.stringify({alg:"HS256",typ:"JWT"}));
+const payload = btoa(JSON.stringify({user:"guest",role:"user"}));
+const signature = "fake_signature_for_guest";
+window.sessionToken = `${header}.${payload}.${signature}`;
+
+document.getElementById('jwtDisplay').textContent = window.sessionToken;
+
+async function checkAccess() {
+  const token = window.sessionToken;
+  try {
+    const res = await fetch('https://breakthis.logise1123.workers.dev/api/level/11/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if(data.success) {
+      localStorage.setItem('breakthis_11', data.token);
+      document.getElementById('overlay').classList.add('show');
+    } else {
+      document.getElementById('logMsg').textContent = data.hint || "Acceso denegado.";
+    }
+  } catch(e) {
+    document.getElementById('logMsg').textContent = "Error de red.";
+  }
+}
+</script>
+</body>
+</html>

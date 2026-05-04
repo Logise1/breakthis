@@ -1,0 +1,94 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Proxy Ciego (SSRF)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.app{background:#161b22;border:1px solid #30363d;border-radius:6px;width:100%;max-width:600px;overflow:hidden}
+.app-header{background:#21262d;padding:15px 20px;border-bottom:1px solid #30363d;font-weight:600;display:flex;align-items:center;gap:10px}
+.app-body{padding:30px 20px}
+.input-group{display:flex;margin-bottom:20px}
+input{flex:1;background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:10px 15px;border-radius:6px 0 0 6px;outline:none;font-family:'JetBrains Mono',monospace}
+input:focus{border-color:#58a6ff}
+button{background:#238636;color:#fff;border:1px solid rgba(240,246,252,0.1);padding:10px 20px;border-radius:0 6px 6px 0;font-weight:600;cursor:pointer;transition:background 0.2s}
+button:hover{background:#2ea043}
+.result{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:15px;min-height:100px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;white-space:pre-wrap;color:#8b949e}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="app-header">
+    🌐 Herramienta de Diagnóstico de Red (Proxy)
+  </div>
+  <div class="app-body">
+    <p style="margin-bottom: 20px; font-size: 0.9rem; color: #8b949e;">
+      Usa esta herramienta para hacer ping a URLs externas. Por seguridad, no se permiten IPs internas (o eso esperamos...). Pista: El secreto está en "/admin/secret".
+    </p>
+    
+    <div class="input-group">
+      <input type="text" id="urlInput" placeholder="http://example.com" value="http://example.com">
+      <button onclick="fetchUrl()">PROBAR URL</button>
+    </div>
+    
+    <div class="result" id="resultOutput">Esperando URL...</div>
+  </div>
+</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #17 — Proxy Ciego (SSRF)</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+async function fetchUrl() {
+  const url = document.getElementById('urlInput').value;
+  const out = document.getElementById('resultOutput');
+  
+  out.textContent = "Obteniendo datos...";
+  
+  try {
+    const res = await fetch('https://breakthis.logise1123.workers.dev/api/level/17/proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target: url })
+    });
+    const data = await res.json();
+    
+    if(data.success) {
+      out.textContent = "✅ " + data.data;
+      if (data.token) {
+        localStorage.setItem('breakthis_17', data.token);
+        setTimeout(() => document.getElementById('overlay').classList.add('show'), 1500);
+      }
+    } else {
+      out.textContent = "❌ Error: " + (data.error || data.data);
+    }
+  } catch(e) {
+    out.textContent = "❌ Error de conexión con el proxy.";
+  }
+}
+</script>
+</body>
+</html>

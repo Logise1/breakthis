@@ -29,12 +29,12 @@ export default {
     const url = new URL(request.url);
     if (request.method==='OPTIONS') return new Response(null,{status:204,headers:CORS});
 
-    // ── Genérico: completar retos 3,4,5,10 ──
+    // ── Genérico: completar retos 3,4,5,10,12,13,14,15,16 ──
     if (url.pathname==='/api/complete'&&request.method==='POST') {
       try {
         const {challenge}=await request.json();
         const id=parseInt(challenge);
-        if(!id||![3,4,5,10].includes(id)) return err({error:'Use level-specific endpoints'});
+        if(!id||![3,4,5,10,12,13,14,15,16].includes(id)) return err({error:'Use level-specific endpoints'});
         return json({token:await seal(id)});
       } catch(e) { return err({error:'Bad request'}); }
     }
@@ -133,6 +133,42 @@ export default {
         const {password}=await request.json();
         if(password===LEVELS[9].password) return json({success:true,token:await seal(9)});
         return json({success:false,hint:'Decodifica el cipher de GET /api/level/9/cipher con atob()'});
+      } catch(e) { return err({success:false}); }
+    }
+
+    // ════════════════════════════════════════════
+    //  LEVEL 11 — Firma Vacía (JWT)
+    // ════════════════════════════════════════════
+    if (url.pathname==='/api/level/11/verify'&&request.method==='POST') {
+      try {
+        const {token}=await request.json();
+        const parts = token.split('.');
+        if(parts.length!==3) return err({success:false,hint:'Formato JWT inválido'});
+        const header = JSON.parse(atob(parts[0]));
+        const payload = JSON.parse(atob(parts[1]));
+        if(header.alg && header.alg.toLowerCase() === 'none') {
+           if(payload.role === 'admin') return json({success:true,token:await seal(11)});
+           return json({success:false,hint:'Algoritmo eludido, pero el rol no es admin'});
+        }
+        return err({success:false,hint:'Firma JWT inválida. ¿Podemos evitar comprobarla?'});
+      } catch(e) { return err({success:false}); }
+    }
+
+    // ════════════════════════════════════════════
+    //  LEVEL 17 — Proxy Ciego (SSRF)
+    // ════════════════════════════════════════════
+    if (url.pathname==='/api/level/17/proxy'&&request.method==='POST') {
+      try {
+        const {target}=await request.json();
+        if(!target) return err({error:'Provide target url'});
+        
+        if(target.startsWith('http://localhost') || target.startsWith('http://127.0.0.1')) {
+          if(target.includes('/admin/secret')) {
+             return json({success:true, data: 'admin_flag_x900', token: await seal(17)});
+          }
+          return json({success:true, data: 'Welcome to local network. Admin is at /admin/secret'});
+        }
+        return json({success:false, data: 'External request mocked successfully. No secret here.'});
       } catch(e) { return err({success:false}); }
     }
 

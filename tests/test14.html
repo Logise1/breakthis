@@ -1,0 +1,118 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Contaminación Cruzada</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#fafafa;color:#333;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.panel{background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.08);padding:40px;text-align:center;width:400px}
+.avatar{width:80px;height:80px;background:#eee;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+h2{margin-bottom:5px;font-size:1.5rem}
+.role{color:#888;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:30px;display:inline-block;padding:4px 10px;background:#f0f0f0;border-radius:20px}
+.role.admin{background:#dcfce7;color:#166534}
+.btn{background:#111;color:#fff;border:none;padding:12px 24px;border-radius:6px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s}
+.btn:hover{background:#333}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <div class="avatar" id="avatar">👤</div>
+  <h2 id="username">Guest</h2>
+  <div class="role" id="roleBadge">User</div>
+  
+  <p style="font-size:0.8rem;color:#666;margin-bottom:20px;line-height:1.5">
+    Se cargan las preferencias desde location.hash.<br>
+    Intenta cambiar el color o el nombre pasando JSON.
+  </p>
+
+  <button class="btn" onclick="requestAdminData()">Acceder a la Bóveda</button>
+  <div id="error" style="color:red;font-size:0.8rem;margin-top:15px;display:none">Error: Solo administradores.</div>
+</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #14 — Contaminación Cruzada</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+// Función vulnerable a Prototype Pollution
+function merge(target, source) {
+  for (let key in source) {
+    if (typeof source[key] === 'object' && source[key] !== null) {
+      if (!target[key]) target[key] = {};
+      merge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+// Objeto de configuración base
+const config = {
+  theme: 'light',
+  user: {
+    name: 'Guest',
+    icon: '👤'
+  }
+};
+
+// Intenta leer parámetros del hash de la URL
+// Ejemplo: #{"user":{"name":"Hacker"}}
+try {
+  if (location.hash.length > 1) {
+    const userPrefs = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+    merge(config, userPrefs);
+  }
+} catch(e) {
+  console.log("Error parseando hash");
+}
+
+document.getElementById('username').textContent = config.user.name;
+document.getElementById('avatar').textContent = config.user.icon;
+
+// El control de acceso revisa un objeto vacío nuevo para ver si hereda propiedades globales contaminadas
+function requestAdminData() {
+  const sessionCheck = {}; // Debería estar vacío
+  
+  if (sessionCheck.isAdmin === true) {
+    document.getElementById('roleBadge').textContent = 'Admin';
+    document.getElementById('roleBadge').classList.add('admin');
+    
+    fetch('https://breakthis.logise1123.workers.dev/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge: 14 })
+    }).then(r=>r.json()).then(d=>{
+      localStorage.setItem('breakthis_14', d.token);
+      document.getElementById('overlay').classList.add('show');
+    });
+  } else {
+    document.getElementById('error').style.display = 'block';
+    setTimeout(() => document.getElementById('error').style.display = 'none', 2000);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Ataque de Tiempo</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.lock-container{background:#1a1a1a;border:2px solid #333;border-radius:20px;padding:40px;width:350px;text-align:center;box-shadow:inset 0 0 50px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5)}
+.screen{background:#050505;border:2px solid #222;border-radius:10px;padding:20px;margin-bottom:30px;font-family:'Orbitron',sans-serif;font-size:2rem;letter-spacing:10px;color:#f00;text-shadow:0 0 10px rgba(255,0,0,0.5)}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+.key{background:#222;border:1px solid #444;color:#fff;font-family:'Orbitron',sans-serif;font-size:1.5rem;padding:15px 0;border-radius:10px;cursor:pointer;transition:all 0.1s;user-select:none}
+.key:active{background:#444;transform:scale(0.95)}
+.status{font-size:0.8rem;color:#666;height:20px}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="lock-container">
+  <div class="screen" id="screen">____</div>
+  <div class="numpad">
+    <div class="key" onclick="press('1')">1</div><div class="key" onclick="press('2')">2</div><div class="key" onclick="press('3')">3</div>
+    <div class="key" onclick="press('4')">4</div><div class="key" onclick="press('5')">5</div><div class="key" onclick="press('6')">6</div>
+    <div class="key" onclick="press('7')">7</div><div class="key" onclick="press('8')">8</div><div class="key" onclick="press('9')">9</div>
+    <div class="key" style="grid-column:2" onclick="press('0')">0</div>
+  </div>
+  <div class="status" id="status">Esperando entrada...</div>
+</div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #16 — Ataque de Tiempo</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+let currentPin = '';
+const screenEl = document.getElementById('screen');
+const statusEl = document.getElementById('status');
+
+// El PIN es de 4 dígitos. Se verifica de forma asíncrona.
+const _s = "8156"; 
+
+async function _c(d1, d2) {
+  return new Promise(r => setTimeout(() => r(d1 === d2), 150));
+}
+
+// Puedes llamar a window.verify(pin) desde la consola para automatizar.
+window.verify = async function(pinStr) {
+  if (pinStr.length !== 4) return false;
+  for (let i = 0; i < 4; i++) {
+    const ok = await _c(_s[i], pinStr[i]);
+    if (!ok) return false;
+  }
+  return true;
+}
+
+async function press(d) {
+  if (currentPin.length >= 4) return;
+  currentPin += d;
+  screenEl.textContent = currentPin.padEnd(4, '_');
+  
+  if (currentPin.length === 4) {
+    statusEl.textContent = 'Verificando...';
+    screenEl.style.color = '#aa0000';
+    
+    const isValid = await window.verify(currentPin);
+    
+    if (isValid) {
+      screenEl.style.color = '#00ff88';
+      statusEl.textContent = 'Acceso Concedido';
+      
+      fetch('https://breakthis.logise1123.workers.dev/api/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ challenge: 16 })
+      }).then(r=>r.json()).then(d=>{
+        localStorage.setItem('breakthis_16', d.token);
+        document.getElementById('overlay').classList.add('show');
+      });
+    } else {
+      screenEl.style.color = '#f00';
+      statusEl.textContent = 'PIN Incorrecto';
+      setTimeout(() => {
+        currentPin = '';
+        screenEl.textContent = '____';
+      }, 1000);
+    }
+  }
+}
+</script>
+</body>
+</html>

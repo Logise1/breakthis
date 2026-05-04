@@ -1,0 +1,81 @@
+<!--
+████████████████████████████████████████████████████████████████
+██                                                            ██
+██    ⛔  PROHIBIDO MIRAR EL CÓDIGO FUENTE  ⛔               ██
+██                                                            ██
+██    El objetivo del reto es usar la CONSOLA (F12),          ██
+██    las DevTools del navegador, y tu ingenio.               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreakThis — Aplastamiento DOM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#1e1b4b;color:#e0e7ff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.wrapper{background:#312e81;border:1px solid #4338ca;border-radius:12px;padding:40px;width:100%;max-width:450px;text-align:center}
+h2{margin-bottom:15px;color:#a5b4fc}
+p{color:#c7d2fe;font-size:0.9rem;margin-bottom:30px;line-height:1.6}
+.btn{background:#4f46e5;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;transition:all 0.2s}
+.btn:hover{background:#6366f1;transform:scale(1.02)}
+#msg{margin-top:20px;font-size:0.85rem;color:#fca5a5}
+
+.success-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column}
+.success-overlay.show{display:flex}
+.success-overlay h2{font-size:3rem;color:#00ff88;animation:pulse 1s infinite}
+.success-overlay p{color:#aaa;margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <h2>Control de Acceso Global</h2>
+  <p>El validador confía en que la configuración global <b>window.GlobalSecurityPolicy</b> no ha sido alterada. ¿Puedes modificar el DOM para engañarlo?</p>
+  
+  <button class="btn" onclick="checkAccess()">Validar Política</button>
+  <div id="msg"></div>
+</div>
+
+<!-- Puedes inyectar elementos HTML aquí mismo desde las DevTools (F12) -->
+<div id="injection-zone"></div>
+
+<div class="success-overlay" id="overlay">
+  <h2>🏆 ¡HACKEADO!</h2>
+  <p>Has completado el Reto #15 — Aplastamiento DOM</p>
+  <p style="color:#00ff88;margin-top:20px;font-family:monospace">Vuelve a la página principal para continuar</p>
+</div>
+
+<script>
+function checkAccess() {
+  const msg = document.getElementById('msg');
+  
+  // DOM Clobbering vulnerability:
+  // Si no declaras una variable con let/const/var, window.id hace referencia al elemento con ese id.
+  // Además, si el elemento es un ancla (<a>), window.id.href devolverá la URL.
+  // Si es un formulario, window.id.isBypassed podría devolver un input anidado.
+  
+  if (window.GlobalSecurityPolicy && window.GlobalSecurityPolicy.isBypassed && window.GlobalSecurityPolicy.isBypassed.value === 'true') {
+    msg.style.color = '#86efac';
+    msg.textContent = 'Política eludida exitosamente.';
+    
+    fetch('https://breakthis.logise1123.workers.dev/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge: 15 })
+    }).then(r=>r.json()).then(d=>{
+      localStorage.setItem('breakthis_15', d.token);
+      document.getElementById('overlay').classList.add('show');
+    });
+  } else {
+    msg.textContent = 'Acceso denegado. Política de seguridad intacta.';
+  }
+}
+</script>
+</body>
+</html>

@@ -282,13 +282,13 @@
   <main>
     <header>
       <h1>Break This</h1>
-      <p class="subtitle">10 Desafíos de Hacking Web</p>
+      <p class="subtitle">17 Desafíos de Hacking Web</p>
     </header>
 
     <div class="progress-wrapper">
       <div class="progress-header">
         <span>Progreso</span>
-        <span id="progressText">0 / 10 completados</span>
+        <span id="progressText">0 / 17 completados</span>
       </div>
       <div class="progress-track">
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
@@ -324,7 +324,14 @@
       { id: 7, title: "Token Falsificado", desc: "La aplicación guarda tu sesión en localStorage de forma predecible.", diff: 3, type: "Portal bancario" },
       { id: 8, title: "Escalada de Privilegios", desc: "Eres un usuario 'viewer'. Encuentra la manera de ser 'admin'.", diff: 3, type: "Foro" },
       { id: 9, title: "Mensaje Cifrado", desc: "La contraseña está codificada en Base64 en un archivo JS externo.", diff: 3, type: "Chat cifrado" },
-      { id: 10, title: "Contra Reloj", desc: "La bóveda se abre en 5 minutos en el cliente. Intercepta el temporizador.", diff: 5, type: "Bóveda digital" }
+      { id: 10, title: "Contra Reloj", desc: "La bóveda se abre en 5 minutos en el cliente. Intercepta el temporizador.", diff: 5, type: "Bóveda digital" },
+      { id: 11, title: "Firma Vacía", desc: "El servidor usa un JSON Web Token (JWT) para la sesión. ¿Qué pasa si el algoritmo es 'none'?", diff: 4, type: "JWT Auth" },
+      { id: 12, title: "Falsificación de Lienzo", desc: "El sistema de anti-fraude usa Canvas Fingerprinting. Engaña a la función toDataURL.", diff: 4, type: "Anti-Bot Bypass" },
+      { id: 13, title: "Caja Negra WASM", desc: "La lógica de validación está compilada en WebAssembly. Haz ingeniería inversa o fuerza bruta.", diff: 5, type: "WebAssembly" },
+      { id: 14, title: "Contaminación Cruzada", desc: "La aplicación carga preferencias desde la URL. Contamina el prototipo global de JavaScript.", diff: 4, type: "Prototype Pollution" },
+      { id: 15, title: "Aplastamiento DOM", desc: "El script confía en las referencias globales. Usa el Inspector (F12) para inyectar elementos HTML falsos.", diff: 4, type: "DOM Clobbering" },
+      { id: 16, title: "Ataque de Tiempo", desc: "La cerradura comprueba el PIN de forma asíncrona. Mide el tiempo de respuesta para adivinarlo.", diff: 5, type: "Side-Channel" },
+      { id: 17, title: "Proxy Ciego (SSRF)", desc: "Un endpoint obtiene imágenes de URLs externas. Engáñalo para acceder a su propia red local.", diff: 5, type: "SSRF" }
     ];
 
     const API = 'https://breakthis.logise1123.workers.dev';
@@ -340,7 +347,7 @@
       _ok.clear();
       for (let i = 1; i <= 2; i++) if (localStorage.getItem('breakthis_'+i) === _seal(i)) _ok.add(i);
       const tokens = {};
-      for (let i = 3; i <= 10; i++) { const t = localStorage.getItem('breakthis_'+i); if (t) tokens[i] = t; }
+      for (let i = 3; i <= 17; i++) { const t = localStorage.getItem('breakthis_'+i); if (t) tokens[i] = t; }
       if (Object.keys(tokens).length > 0) {
         try {
           const r = await fetch(API+'/api/verify-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens})});
@@ -407,8 +414,8 @@
 
       // Actualizar progreso
       const count = getCompletedCount();
-      document.getElementById('progressFill').style.width = (count / 10 * 100) + '%';
-      document.getElementById('progressText').textContent = count + ' / 10 completados';
+      document.getElementById('progressFill').style.width = (count / 17 * 100) + '%';
+      document.getElementById('progressText').textContent = count + ' / 17 completados';
     }
 
     // Inicialización
